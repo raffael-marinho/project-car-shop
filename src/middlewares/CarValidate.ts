@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 const messageSeat = 'seatsQty is obrigatory';
 const messageEmpty = 'Empty request';
 const messageDoor = 'doorsQty is obrigatory';
-export default class CarValidation {
+export default class Carvalidate {
   public emptyObject = (
     req: Request,
     res: Response,
@@ -17,7 +17,7 @@ export default class CarValidation {
     next();
   };
 
-  public seatValidation = (
+  public seatvalidate = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -35,7 +35,7 @@ export default class CarValidation {
     next();
   };
 
-  public doorsValidation = (
+  public doorsvalidate = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -53,7 +53,7 @@ export default class CarValidation {
     next();
   };
 
-  public atributesValidation1 = (
+  public atributesvalidate1 = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -67,7 +67,7 @@ export default class CarValidation {
     next();
   };
 
-  public atributesValidation2 = (
+  public atributesvalidate2 = (
     req: Request,
     res: Response,
     next: NextFunction,
