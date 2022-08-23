@@ -1,23 +1,27 @@
 import { NextFunction, Request, Response } from 'express';
+import { isValidObjectId } from 'mongoose';
 
 const messageSeat = 'seatsQty is obrigatory';
 const messageEmpty = 'Empty request';
 const messageDoor = 'doorsQty is obrigatory';
-export default class Carvalidate {
+const messageId = 'Id must have 24 hexadecimal characters';
+const messageObj = 'Object not found';
+
+export default class CarValidation {
   public emptyObject = (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     const request = req.body;
-    if (!request) {
+    if (Object.keys(request).length === 0) {
       return res.status(400).json({ message: messageEmpty });
     }
 
     next();
   };
 
-  public seatvalidate = (
+  public seatValidation = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -35,7 +39,7 @@ export default class Carvalidate {
     next();
   };
 
-  public doorsvalidate = (
+  public doorsValidation = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -53,7 +57,7 @@ export default class Carvalidate {
     next();
   };
 
-  public atributesvalidate1 = (
+  public atributesValidation1 = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -67,7 +71,7 @@ export default class Carvalidate {
     next();
   };
 
-  public atributesvalidate2 = (
+  public atributesValidation2 = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -76,6 +80,27 @@ export default class Carvalidate {
 
     if (!buyValue || !doorsQty || !seatsQty) {
       return res.status(400).json({ message: messageSeat });
+    }
+
+    next();
+  };
+
+  public validateMongdbId = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const { id } = req.params;
+    const isIdValid = isValidObjectId(id);
+
+    if (id.length < 24) {
+      return res.status(400)
+        .json({ error: messageId });
+    }
+
+    if (!isIdValid) {
+      return res.status(404)
+        .json({ error: messageObj });
     }
 
     next();
