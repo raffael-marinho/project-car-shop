@@ -3,13 +3,14 @@ import { ICar } from '../interfaces/ICar';
 import MongoModel from './MongoModel';
 
 const carsMongooseSchema = new Schema<ICar>({
+  
+  seatsQty: Number,
   model: String,
-  year: Number,
-  color: String,
   status: Boolean,
   buyValue: Number,
+  year: Number,
   doorsQty: Number,
-  seatsQty: Number,
+  color: String,
 }, { versionKey: false });
 
 class CarsModel extends MongoModel<ICar> {

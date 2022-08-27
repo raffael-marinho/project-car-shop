@@ -92,6 +92,7 @@ export default class CarValidation {
   ) => {
     const { id } = req.params;
     const isIdValid = isValidObjectId(id);
+    console.log({ isIdValid, id });
 
     if (id.length < 24) {
       return res.status(400)
