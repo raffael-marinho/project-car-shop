@@ -57,7 +57,7 @@ export default class CarValidation {
     next();
   };
 
-  public atributesValidation1 = (
+  public atributesValid = (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -71,7 +71,7 @@ export default class CarValidation {
     next();
   };
 
-  public atributesValidation2 = (
+  public atributesValidation = (
     req: Request,
     res: Response,
     next: NextFunction,

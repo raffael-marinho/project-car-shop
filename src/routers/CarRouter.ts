@@ -1,43 +1,18 @@
 import { Router } from 'express';
-import CarController from '../controllers/CarController';
-import CarValidate from '../middlewares/CarValidate';
+import Controller from '../controllers/CarController';
+import Model from '../models/CarModel';
+import Service from '../services/CarService';
 
-const carsRoutes = Router();
-const carValidate = new CarValidate();
-const carController = new CarController();
+const carRouter = Router();
 
-carsRoutes.post(
-  '/',
-  carValidate.emptyObject,
-  carValidate.seatValidation,
-  carValidate.doorsValidation,
-  carValidate.atributesValidation1,
-  carValidate.atributesValidation2,
-  carController.create,
-);
+const model = new Model();
+const service = new Service(model);
+const controller = new Controller(service);
 
-carsRoutes.get(
-  '/',
-  carController.getAll,
-);
+carRouter.post('/', (req, res) => controller.create(req, res));
+carRouter.get('/', (req, res) => controller.read(req, res));
+carRouter.get('/:id', (req, res, next) => controller.readOne(req, res, next));
+carRouter.put('/:id', (req, res, next) => controller.update(req, res, next));
+carRouter.delete('/:id', (req, res, next) => controller.delete(req, res, next));
 
-carsRoutes.get(
-  '/:id',
-  carValidate.validateMongdbId,
-  carController.getById,
-);
-
-carsRoutes.delete(
-  '/:id',
-  carValidate.validateMongdbId,
-  carController.deleteById,
-);
-
-carsRoutes.put(
-  '/:id',
-  carValidate.emptyObject,
-  carValidate.validateMongdbId,
-  carController.updateById,
-);
-
-export default carsRoutes;
+export default carRouter;

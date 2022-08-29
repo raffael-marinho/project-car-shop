@@ -1,65 +1,69 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import IService from '../interfaces/IService';
+import { ICar } from '../interfaces/ICar';
 
-import CarServices from '../services/CarService';
+class Controller {
+  constructor(private _service: IService<ICar>) { }
 
-const objectNotFound = 'Object not found';
-
-export default class CarController {
-  private _service = new CarServices();
-
-  public create = async (
-    req: Request,
-    res: Response,
-  ) => {
-    const requestBody = req.body;
-    const newCar = await this._service.add({ ...requestBody });
-    return res.status(201).json(newCar);
-  };
-
-  public getAll = async (
-    _req: Request,
-    res: Response,
-  ) => {
-    const allCars = await this._service.getAll();
-    return res.status(200).json(allCars);
-  };
-
-  public getById = async (
-    req: Request,
-    res: Response,
-  ) => {
-    const { id } = req.params;
-    const oneCar = await this._service.getById(id);
-    if (oneCar === null) {
-      return res.status(404).json({ error: objectNotFound });
+  public async create(req: Request, res: Response<ICar>) {
+    try {
+      const createCar = await this._service.create(req.body);
+      return res.status(201).json(createCar);
+    } catch (error) {
+      return res.status(400).end();
     }
-    return res.status(200).json(oneCar);
-  };
+  }
 
-  public deleteById = async (
-    req: Request,
-    res: Response,
-  ) => {
-    const { id } = req.params;
-    const oneCar = await this._service.deleteById(id);
-
-    if (oneCar === null) {
-      return res.status(404).json({ error: objectNotFound });
+  public async read(req: Request, res: Response<ICar[]>) {
+    try {
+      const getAllCar = await this._service.read();
+      return res.status(200).json(getAllCar);
+    } catch (error) {
+      return res.status(400).end();
     }
-    return res.status(204).json();
-  };
+  }
 
-  public updateById = async (
+  public async readOne(
     req: Request,
-    res: Response,
-  ) => {
-    const { id } = req.params;
-    const requestBody = req.body;
-    const updatedMoto = await this._service.updateById(id, { ...requestBody });
-
-    if (updatedMoto === null) {
-      return res.status(404).json({ error: objectNotFound });
+    res: Response<ICar | null>,
+    next: NextFunction,
+  ) {
+    try {
+      const { id } = req.params;
+      const getCarById = await this._service.readOne(id);    
+      return res.status(200).json(getCarById);
+    } catch (error) {
+      next(error);
     }
-    return res.status(200).json(updatedMoto);
-  };
+  }
+
+  public async update(
+    req: Request,
+    res: Response<ICar | null>,
+    next: NextFunction,
+  ) {
+    try {
+      const { id } = req.params;
+      const updateCar = await this._service.update(id, req.body);    
+      return res.status(200).json(updateCar);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async delete(
+    req: Request,
+    res: Response<ICar | null>,
+    next: NextFunction,
+  ) {
+    try {
+      const { id } = req.params;
+      const deleteCar = await this._service.delete(id);    
+      return res.status(204).json(deleteCar);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
+
+export default Controller; 

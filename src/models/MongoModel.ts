@@ -1,36 +1,43 @@
-import { isValidObjectId, Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
+
 import { IModel } from '../interfaces/IModel';
 
-export default abstract class GenericModel<T> implements IModel<T> {
-  private _model: Model<T>;
+abstract class MongoModel<T> implements IModel<T> {
+  protected _model: Model<T>;
 
   constructor(model: Model<T>) {
     this._model = model;
   }
 
-  public async create(objToCreate: T): Promise<T> {
-    return this._model.create({ ...objToCreate });
+  public async create(obj: T): Promise<T> { 
+    return this._model.create({ ...obj });
   }
 
-  public async read(): Promise<T[]> {
+  public async read():Promise<T[]> {
     return this._model.find();
   }
 
-  public async readOne(id: string): Promise<T | null> {
-    if (!isValidObjectId(id)) throw Error('InvalidMongoId');
+  public async readOne(_id:string):Promise<T | null> {
+    if (!isValidObjectId(_id)) throw new Error('invalid id');
 
-    return this._model.findOne({ id });
+    return this._model.findOne({ _id });
   }
 
-  public async update(id: string, objToupdate: Partial<T>): Promise<T | null> {
+  public async update(_id:string, obj:Partial<T>):Promise<T | null> {
+    if (!isValidObjectId(_id)) throw new Error('invalid id');
+
     return this._model.findByIdAndUpdate(
-      { id },
-      { ...objToupdate },
+      { _id },
+      { ...obj },
       { new: true },
     );
   }
 
-  public async delete(id: string): Promise<T | null> {
-    return this._model.findByIdAndDelete({ id });
+  public async delete(_id:string):Promise<T | null> {
+    if (!isValidObjectId(_id)) throw Error('invalid _id');
+
+    return this._model.findByIdAndRemove({ _id });
   }
 }
+
+export default MongoModel; 
