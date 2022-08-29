@@ -30,13 +30,6 @@ describe('Controlador de carro de teste', () => {
     sinon.restore()
   })
   
-  describe('Teste encontrar todos os carros', () => {
-    it('O sucesso do teste encontra todos os carros no controlador', async () => {
-      await carController.read(req, res);
-      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
-      expect((res.json as sinon.SinonStub).calledWith(returnCarMockId)).to.be.true;
-    });
-  });
   
   
   describe('Testar encontrar carro por ID', () => {
@@ -57,4 +50,11 @@ describe('Controlador de carro de teste', () => {
     });
   });
   
+  describe('Teste encontrar todos os carros', () => {
+    it('O sucesso do teste encontra todos os carros no controlador', async () => {
+      await carController.read(req, res);
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(returnCarMockId)).to.be.true;
+    });
+  });
 });
